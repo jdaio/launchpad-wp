@@ -1,0 +1,44 @@
+{
+    "dry-run": false,
+    "verbose": false,
+    "force": true,
+    "non-interactive": true,
+    "increment": "minor",
+    "beforeChangelogCommand": "auto-changelog",
+    "safeBump": false,
+    "git": {
+        "changelog": "git log --pretty=format:\"* %s (%h)\" ${latestTag}...HEAD",
+        "requireCleanWorkingDir": true,
+        "requireUpstream": true,
+        "requireCommits": false,
+        "addUntrackedFiles": false,
+        "commit": true,
+        "commitMessage": "Release ${version}",
+        "commitArgs": "",
+        "tag": true,
+        "tagName": "${version}",
+        "tagAnnotation": "Release ${version}",
+        "tagArgs": "",
+        "push": true,
+        "pushArgs": "--follow-tags",
+        "pushRepo": "origin"
+    },
+    "src": {
+        "commitMessage": "Release v${version}",
+        "tagAnnotation": "Release v${version}"
+    },
+    "github": {
+        "release": true,
+        "releaseName": "v${version}"
+    },
+    "prompt": {
+        "src": {
+            "status": true,
+            "commit": true,
+            "tag": true,
+            "push": true,
+            "release": true,
+            "publish": true
+        }
+    }
+}

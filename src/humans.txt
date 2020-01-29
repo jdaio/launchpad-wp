@@ -1,0 +1,13 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Jamal Ali-Mohammed
+    https://jdaio.github.io
+
+# TECHNOLOGY COLOPHON
+
+    Standards: HTML5, CSS3, JS/ES6, Twig, PHP
+    Components: Timber, Advanced Custom Fields
+    Software: WordPress
