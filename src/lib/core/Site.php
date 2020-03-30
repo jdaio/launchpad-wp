@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD;
+namespace CORE;
 
 // Use Timber
 use Timber\Timber;
@@ -36,7 +36,7 @@ class Site extends \Timber\Site {
     public function siteInit()
     {
         // Make the theme available for translation.
-        load_theme_textdomain('launchpad', get_template_directory() . '/translations');
+        load_theme_textdomain('launchpad', get_template_directory() . '/languages');
 
         // Register theme menus.
         add_action('init', array($this, 'registerThemeMenus'));
@@ -59,9 +59,6 @@ class Site extends \Timber\Site {
 
         // Register ACF Options Pages
         add_action('acf/init', array($this, 'registerAcfOptions'));
-
-        // Disable Gutenberg
-        // add_filter('use_block_editor_for_post', array($this, '__return_false'));
     }
 
     /**
@@ -109,7 +106,7 @@ class Site extends \Timber\Site {
         /* register_sidebar(array(
             'name'          => __('Page Sidebar', 'launchpad'),
             'id'            => 'sidebar_page',
-            'description'   => __('Widgets in this area will be shown on all pages.', 'sef'),
+            'description'   => __('Widgets in this area will be shown on all pages.', 'launchpad'),
             'before_widget' => '<li id="%1$s" class="widget %2$s">',
             'after_widget'  => '</li>',
             'before_title'  => '<h2 class="widget__title">',
@@ -129,14 +126,14 @@ class Site extends \Timber\Site {
      */
     public function registerAcfBlocks()
     {
-        /* acf_register_block_type(array(
-            'name'              => 'columns',
-            'title'             => __('Columns'),
-            'description'       => __('A custom column-based content block.'),
+        /* acf_register_block_Type(array(
+            'name'              => 'example-block',
+            'title'             => __('Example Block'),
+            'description'       => __('An example block.'),
             'render_template'   => 'lib/acf-blocks/example-block.php',
             'category'          => 'layout',
-            'icon'              => 'example-icon',
-            'keywords'          => array('columns'),
+            'icon'              => '',
+            'keywords'          => array(),
             'align'             => 'center',
         )); */
     }

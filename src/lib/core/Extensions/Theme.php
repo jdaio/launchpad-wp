@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD\Extensions;
+namespace CORE\Extensions;
 
 class Theme implements SiteExtension {
     public function extend()

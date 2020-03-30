@@ -1,1 +1,4 @@
-/* Import custom font styles for the WordPress editor here. */
+/**
+ * Add custom editor fonts here. Make sure to update the `editorCustomFonts`
+ * function in `./lib/core/Media.php`.
+ */

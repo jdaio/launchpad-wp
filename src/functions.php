@@ -7,7 +7,7 @@
  */
 
 // Define the theme's function namespace in a constant.
-define('THEME_NAMESPACE', 'LAUNCHPAD\\');
+define('CORE_NAMESPACE', 'CORE\\');
 
 /**
  * Function to automatically load and utilize classes as they're instantiated.
@@ -18,9 +18,9 @@ function theme_autoloader($className)
 {
     $baseDirectory = __DIR__ . '/lib/core/';
 
-    $namespacePrefixLength = strlen(THEME_NAMESPACE);
+    $namespacePrefixLength = strlen(CORE_NAMESPACE);
 
-    if (strncmp(THEME_NAMESPACE, $className, $namespacePrefixLength) !== 0) {
+    if (strncmp(CORE_NAMESPACE, $className, $namespacePrefixLength) !== 0) {
         return;
     }
 
@@ -32,12 +32,12 @@ function theme_autoloader($className)
     }
 }
 
-if (\LAUNCHPAD\Helpers::isTimberActivated()) {
-    new \LAUNCHPAD\Settings();
-    new \LAUNCHPAD\Security();
-    new \LAUNCHPAD\Performance();
-    new \LAUNCHPAD\Media();
-    new \LAUNCHPAD\Site();
+if (\CORE\Helpers::isTimberActivated()) {
+    new \CORE\Settings();
+    new \CORE\Security();
+    new \CORE\Performance();
+    new \CORE\Media();
+    new \CORE\Site();
 } else {
-    \LAUNCHPAD\Helpers::addTimberErrorNotice();
+    \CORE\Helpers::addTimberErrorNotice();
 }

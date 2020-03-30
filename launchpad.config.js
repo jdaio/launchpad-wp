@@ -3,21 +3,23 @@
  *
  * 1. Edit the variables as per your project requirements.
  * 2. In paths you can add <<glob or array of globs>>.
- *
- * @package Launchpad
  */
 
 module.exports = {
     /**
-     * Project Options
+     * BrowserSync Options
      */
+    port: 8000,
 
-    // URL to local WordPress site.
-    projectURL: '127.0.0.1',
+    /**
+     * HTML Handling Options
+     */
+    htmlSource: './html/**/*',
 
-    // Theme/Plugin URL. Leave as default if gulpfile is in root folder.
-    productURL: './',
-
+    /**
+     * PHP Handling Options
+     */
+    phpSource: './src/**/*',
 
     /**
      * CSS Handling Options
@@ -25,6 +27,7 @@ module.exports = {
 
     // Path to main .scss file.
     styleEntry: './assets/scss/main.scss', // Path to main .scss file.
+    watchStyles: './assets/scss/**/*.scss',
 
     // Browser Compatibility
     BROWSERS_LIST: [
@@ -42,14 +45,13 @@ module.exports = {
         'ie >= 11',
     ],
 
-
     /**
      * Javascript Handling Options
      */
 
     // Javascript Entry File
-    jsEntry: './assets/js/main.js',
-
+    jsEntry: './assets/js/index.js',
+    watchScripts: './assets/js/**/*.js',
 
     /**
      * Image Handling Options
@@ -58,55 +60,10 @@ module.exports = {
     // Image Source Folder
     imgSource: './assets/img/**/*',
 
-
     /**
      * Included File Options
      */
 
     // Includes Source Folder
     incSource: './assets/inc/**/*',
-
-
-    /**
-     * Translation Options
-     */
-
-    // Theme textdomain
-    textDomain: 'launchpad',
-
-    // Translation File Name
-    translationFile: 'launchpad.pot',
-
-    // Translation File Directory
-    translationSource: './translations/**/*.*',
-    translationDestination: './src/translations',
-
-    // Package Name
-    packageName: 'launchpad',
-
-    // Bug Report URL
-    bugReport: '#',
-
-    // Last Translator Email ID
-    lastTranslator: 'Jamal Ali-Mohammed <jamal@digitalheat.co>',
-
-    // Team's Email ID
-    team: 'Digital Heat <hello@digitalheat.co>',
-
-
-    /**
-     * Watch File Paths
-     */
-
-    // CSS Files
-    watchStyles: './assets/scss/**/*.scss',
-
-    // Scripts
-    watchScripts: './assets/js/**/*.js',
-
-    // HTML Files
-    watchViews: './html/**/*.html',
-
-    // PHP Files
-    watchPHP: './src/**/*.php',
 };

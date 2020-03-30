@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD;
+namespace CORE;
 
 class Helpers {
     /**

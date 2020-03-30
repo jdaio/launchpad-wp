@@ -1,9 +1,0 @@
----
-deployment:
-  tasks:
-    - export SOURCEPATH=/home/{USER}/public_html/wp-content/themes/{THEME}
-    - export ASSETSPATH=/home/{USER}/public_html/wp-content/themes/{THEME}/dist
-    - /bin/rm -rf $SOURCEPATH
-    - /bin/mkdir $SOURCEPATH
-    - /bin/cp -r src/* $SOURCEPATH
-    - /bin/cp -r dist $ASSETSPATH

@@ -14,7 +14,7 @@ $context = Timber::get_context();
 $context['posts'] = new Timber\PostQuery();
 
 // Initialize array of templates with 'index.twig'.
-$templates = array('archive.twig');
+$templates = array('index.twig');
 
 // Render the index page view.
 Timber::render($templates, $context);

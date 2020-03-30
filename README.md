@@ -1,27 +1,27 @@
-# Launchpad
+# Launchpad for WordPress Theme Development
 
 ---
 
-Launchpad is a Gulp-powered development kit for simple HTML + CSS + JS projects.
+Launchpad is a Gulp-powered development kit for WordPress themes.
 
 ## How to Get Started
 
 Launchpad requires [Node.js](https://nodejs.org/) v12+ to run.
 
-To get started, clone and install the project's dependencies:
+To get started, clone and install the project.
 
 ```sh
-$ git clone https://github.com/jdaio/launchpad.git
-$ cd launchpad
+$ git clone https://github.com/jdaio/launchpad-wp.git
+$ cd launchpad-wp
 $ npm install
-$ node app
+$ npm run start
 ```
-
-Alternatively, you can download the latest release or repository zip and run `npm install` or `yarn install`.
 
 ## Settings
 
 Launchpad's default paths and options can be found and modified in `launchpad.config.js`.
+
+The options are pretty self-explanatory.
 
 ## Commands
 
@@ -29,32 +29,26 @@ Below are a list of all of the commands that can be used to run Launchpad.
 
 ### Development
 
-* `npm run start` - Runs Launchpad in its default state of processing CSS, JS and HTML.
-* `npm run styles` - Compiles, autoprefixes and minifies SCSS.
-* `npm run scripts:build` - Bundles scripts.
-* `npm run scripts:dev` - Bundles scripts and activates file watcher for changes.
-* `npm run images` - Minifies and processes images.
-* `npm run clearCache` - Clears out the image cache, forcing each image to be regenerated the next time `npm run images` is run.
-* `npm run translations` - Processes translation files for theme use.
+**Primary Scripts:**
 
-### Releases
+-   `npm run dev` - Starts Launchpad in development mode (include unminified CSS and JS with maps and start browserSync).
+-   `npm run prod` - Compiles theme to distribution directory.
 
-Launchpad uses [Release-it](https://github.com/release-it/release-it) for it's package release and versioning workflow.
+**Component Scripts:**
 
-**Note:** *This part is still under development for now, but it shouldn't take much to get it working yourself if you absolutely need it.*
+-   `npm run src:dev` - Copies source files to theme build directory.
+-   `npm run styles:dev` - Processes SCSS, generates sourcemaps and copies to build directory.
+-   `npm run scripts:dev` - Bundles scripts, generates sourcemaps, copies scripts to build directory.
+-   `npm run images:dev` - Optimizes images and copies to build directory.
+-   `npm run includes:dev` - Copies included files to build directory.
 
-* `npm run log` - Updates the project Changelog.
-* `npm run release` - Releases a new version of the project on Github and bumps project version number.
-* `npm run release-minor` - Releases the latest project as a minor (*.x.x) update.
-* `npm run release-major` - Releases the latest project as a major (x.*.*) update.
-* `npm run release-dry` - Runs release it as a dry run, showing the interactivity and the commands it *would* execute.
-* `npm run release-beta` - Releases the latest project as a pre-release (beta) version.
+To run the individual tasks for production, simply replace `:dev` with `:prod` and the respective files will be minified without sourcemaps and/or optimized and copied to the distribution directory.
 
 ## To Do
 
-* Update Gulp workflow to improve development between "development" and "production" environments.
-* Utilize argument-based commands to minimize the number of needed script commands.
-* Complete release-it features.
+-   [ ] Implement proper versioning and auto-changelog.
+-   [ ] Implement automatic WP translations.
+-   [ ] Implement automatic replacement for package names in PHP.
 
 ## License
 

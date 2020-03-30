@@ -8,21 +8,48 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD\Extensions;
+namespace CORE\Extensions;
 
 class Shortcodes implements SiteExtension {
     public function extend()
     {
-        // add_shortcode('example_tag', array($this, 'exampleShortcode'));
+        // add_shortcode('button', array($this, 'buttonShortcode'));
     }
 
-    /* public function exampleShortcode($atts, $content = null)
+    public function buttonShortcode($atts, $content = null)
     {
         extract(shortcode_atts(array(
+            "align" => '',
             "class" => '',
             "id" => '',
+            "link" => '#',
+            "link_title" => '',
+            "new_tab" => '',
+            "style" => 'primary',
         ), $atts));
 
-        return '<p class="' . $class . '" id="' . $id . '">' . $content . '</p>';
-    } */
+        if (!empty($align)) {
+            $align = ' style="text-align: '.$align.';"';
+        }
+
+        if (!empty($class)) {
+            $class = ' ' . $class;
+        }
+
+        if (!empty($id)) {
+            $id = ' id="' . $id . '"';
+        }
+
+        if (!empty($link_title)) {
+            $link_title = ' title="' . $link_title . '"';
+        } else {
+            $link_title = ' title="' . $content . '"';
+        }
+
+        if ($new_tab == 'true') {
+            $new_tab = ' target="_blank" rel="noopener"';
+        }
+
+        return '<p'.$align.'><a href="'.$link.'"'.$link_title.' class="btn btn-'.$style.''.$class.'"'.$id.''.$new_tab.'>'.$content.'</a></p>';
+    }
 }

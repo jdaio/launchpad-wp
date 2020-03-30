@@ -1,17 +1,14 @@
 module.exports = {
-    root: true,
     env: {
-        amd: true,
-        browser: true,
         commonjs: true,
-        es6: true,
-        node: true
+        es6: true
     },
-    extends: 'airbnb-base',
+    extends: 'airbnb',
     parserOptions: {
         sourceType: 'module'
     },
-    plugins: ['import'],
+    plugins: ['import', 'prettier'],
+    root: true,
     rules: {
         indent: ['error', 4]
     }

@@ -1,23 +1,19 @@
 /**
  * -----------------------------------------------------------------------------
- * Launchpad Gulpfile
- *
- * Inspired by Ahmad Awais' WPGulp Setup:
- * https://github.com/ahmadawais/WPGulp
+ * Launchpad for WordPress Development
  *
  * Licensed under GPL v3.0:
- * https://github.com/jdaio/launchpad/blob/master/LICENSE
+ * https://github.com/jdaio/launchpad-wp/blob/master/LICENSE
  *
  * @license GPL-3.0-or-later
  *
  * @overview Handles all file processing tasks, as well as BrowserSync, etc.
  *
- * @author Jamal Ali-Mohammed <https://jdaio.github.io>
+ * @author Jamal Ali-Mohammed <jamal@digitalheat.co>
  *
- * @version 2.1.0
+ * @version 3.0.0
  * -----------------------------------------------------------------------------
  */
-
 
 /**
  * -----------------------------------------------------------------------------
@@ -27,6 +23,11 @@
 
 // Import Gulp
 import gulp from 'gulp';
+import { argv } from 'yargs';
+import del from 'del';
+
+// Import Browser Sync
+import browserSync from 'browser-sync';
 
 // Import CSS Modules
 import easings from 'postcss-easings';
@@ -48,21 +49,15 @@ import watchify from 'watchify';
 // Import Image Related Modules
 import imagemin from 'gulp-imagemin';
 
-// Import Wordpress Related Modules
-import sort from 'gulp-sort';
-import wpPot from 'gulp-wp-pot';
-
 // Import Utility Modules
-import browserSync from 'browser-sync';
 import cache from 'gulp-cache';
-import exit from 'gulp-exit';
 import lineec from 'gulp-line-ending-corrector';
 import log from 'fancy-log';
 import rename from 'gulp-rename';
 
 // Import Launchpad Gulp Configuration
+import pkg from './package.json';
 import config from './launchpad.config';
-
 
 /**
  * -----------------------------------------------------------------------------
@@ -72,35 +67,53 @@ import config from './launchpad.config';
  * -----------------------------------------------------------------------------
  */
 
-const errorHandler = (r) => {
+const errorHandler = r => {
     log.error('❌ ERROR: <%= error.message %>')(r);
 };
 
-
 /**
  * -----------------------------------------------------------------------------
- * Task: `browser-sync`.
- *
- * @description Handles live reloads, CSS injections, and Localhost tunneling.
- * @link http://www.browsersync.io/docs/options/
- *
- * @param {Mixed} done Done.
+ * Global Runtime Variables
  * -----------------------------------------------------------------------------
  */
 
-// Setup Browser Sync.
-function runBrowserSync() {
-    browserSync.init({
-        ghostMode: false,
-        injectChanges: true,
-        logPrefix: 'launchpad',
-        notify: false,
-        open: false,
-        scrollProportionally: false,
-        server: ['./', './html'],
-        watchEvents: ['change', 'add', 'unlink', 'addDir', 'unlinkDir'],
-    });
+const isDev = argv.dev === undefined ? false : true;
+const watchScripts = argv.noWatch === undefined ? true : false;
+const buildDirectory = isDev ? `./build/${pkg.name}` : `./dist/${pkg.name}`;
+
+/**
+ * -----------------------------------------------------------------------------
+ * Task: `init`.
+ *
+ * @description Initializes the gulp task runner.
+ * @param { boolean } runBrowserSync Initialize browserSync on start.
+ * -----------------------------------------------------------------------------
+ */
+
+async function init() {
+    log('🚀 — Initializing gulp tasks...');
+
+    await del([buildDirectory]);
+
+    if (isDev) {
+        return browserSync.init({
+            ghostMode: false,
+            injectChanges: true,
+            logPrefix: 'launchpad',
+            notify: false,
+            open: false,
+            port: config.port ? config.port : 8000,
+            scrollProportionally: false,
+            server: ['./', './html'],
+            ui: {
+                port: config.port ? config.port + 1 : 8001,
+            },
+            watchEvents: ['change', 'add', 'unlink', 'addDir', 'unlinkDir'],
+        });
+    }
 }
+
+gulp.task('init', gulp.series(init));
 
 /**
  * -----------------------------------------------------------------------------
@@ -118,38 +131,70 @@ function runBrowserSync() {
  * -----------------------------------------------------------------------------
  */
 
-gulp.task('styles', () => gulp.src(config.styleEntry, {
-        allowEmpty: true,
-    })
-    .pipe(plumber(errorHandler))
-    .pipe(rename('style.min.css'))
-    .pipe(sourcemaps.init({
-        loadMaps: true,
-    }))
-    .pipe(sass({
-        errorLogToConsole: true,
-        indentWidth: 4,
-        outputStyle: 'compressed',
-        precision: 10,
-    }))
-    .on('error', sass.logError)
-    .pipe(postcss([
-        mqp({
-            sort: true,
-        }),
-        nano({
-            autoprefixer: {
-                browsers: config.BROWSERS_LIST,
-            },
-        }),
-        easings(),
-    ]))
-    .pipe(sourcemaps.write('./'))
-    .pipe(lineec())
-    .pipe(gulp.dest('./dist/css'))
-    .pipe(browserSync.stream())
-    .on('end', () => log('✅ STYLES — completed!')));
+gulp.task('styles', () => {
+    log('⚡️ — Processing stylesheets...');
 
+    let gulpTask = gulp
+        .src(config.styleEntry, {
+            allowEmpty: true,
+        })
+        .pipe(plumber(errorHandler))
+        .pipe(rename('style.min.css'));
+
+    if (isDev) {
+        gulpTask = gulpTask.pipe(rename('style.css')).pipe(
+            sourcemaps.init({
+                loadMaps: true,
+            })
+        );
+    }
+
+    gulpTask = gulpTask
+        .pipe(
+            sass({
+                errorLogToConsole: true,
+                indentWidth: 4,
+                outputStyle: isDev ? 'expanded' : 'compressed',
+                precision: 10,
+            })
+        )
+        .on('error', sass.logError)
+        .pipe(
+            postcss([
+                mqp({
+                    sort: true,
+                }),
+                nano({
+                    autoprefixer: {
+                        browsers: config.BROWSERS_LIST,
+                    },
+                    preset: [
+                        'default',
+                        {
+                            normalizeWhitespace: isDev ? false : true,
+                        },
+                    ],
+                }),
+                easings(),
+            ])
+        );
+
+    if (isDev) {
+        gulpTask = gulpTask.pipe(sourcemaps.write('./'));
+    }
+
+    gulpTask = gulpTask
+        .pipe(lineec())
+        .pipe(gulp.dest(`${buildDirectory}/assets/css`));
+
+    if (isDev) {
+        gulpTask = gulpTask.pipe(browserSync.stream());
+    }
+
+    gulpTask = gulpTask.on('end', () => log('✅ STYLES — completed!'));
+
+    return gulpTask;
+});
 
 /**
  * -----------------------------------------------------------------------------
@@ -161,48 +206,53 @@ gulp.task('styles', () => gulp.src(config.styleEntry, {
  * -----------------------------------------------------------------------------
  */
 
-function compileScripts(watch) {
-    const bundler = watchify(browserify(config.jsEntry, {
-            debug: true,
-        })
-        .transform(babel));
+async function compileScripts() {
+    log('⚡️ — Bundling scripts...');
 
-    function rebundle() {
-        log('-> Bundling scripts...');
+    let bundler = browserify(config.jsEntry, {
+        debug: true,
+    }).transform(babel);
 
-        return bundler
-            .bundle()
-            .pipe(plumber(errorHandler))
-            .pipe(source('build.js'))
-            .pipe(buffer())
-            .pipe(rename('app.min.js'))
-            .pipe(sourcemaps.init({
+    if (isDev && watchScripts) {
+        bundler = watchify(bundler);
+    }
+
+    let bundleScripts = await bundler
+        .bundle()
+        .pipe(plumber(errorHandler))
+        .pipe(source('build.js'))
+        .pipe(buffer())
+        .pipe(rename('app.min.js'));
+
+    if (isDev) {
+        bundleScripts = bundleScripts.pipe(rename('app.js')).pipe(
+            sourcemaps.init({
                 loadMaps: true,
-            }))
-            .pipe(uglify())
-            .pipe(sourcemaps.write('./'))
-            .pipe(lineec())
-            .pipe(gulp.dest('./dist/js'))
-            .on('end', () => log('✅ JS — completed!'));
+            })
+        );
     }
 
-    if (watch) {
-        bundler.on('update', () => rebundle());
+    bundleScripts = bundleScripts.pipe(uglify());
 
-        rebundle();
-    } else {
-        rebundle()
-            .pipe(exit());
+    if (isDev) {
+        bundleScripts = bundleScripts.pipe(sourcemaps.write('./'));
     }
+
+    bundleScripts = bundleScripts
+        .pipe(lineec())
+        .pipe(gulp.dest(`${buildDirectory}/assets/js`))
+        .on('end', () => log('✅ JS — completed!'));
+
+    if (isDev && watchScripts) {
+        bundler.on('update', () => bundleScripts);
+
+        return bundleScripts;
+    }
+
+    return bundleScripts;
 }
 
-function watchScripts() {
-    return compileScripts(true);
-}
-
-gulp.task('scripts:build', gulp.series(compileScripts));
-gulp.task('scripts:dev', gulp.series(watchScripts), done => done());
-
+gulp.task('scripts', gulp.series(compileScripts));
 
 /**
  * -----------------------------------------------------------------------------
@@ -217,51 +267,101 @@ gulp.task('scripts:dev', gulp.series(watchScripts), done => done());
  * -----------------------------------------------------------------------------
  */
 
-gulp.task('images', () => gulp.src(config.imgSource)
-    .pipe(cache(
-        imagemin([
-            imagemin.gifsicle({
-                interlaced: true,
-                optimizationLevel: 2,
-                colors: 256,
-            }),
-            imagemin.jpegtran({
-                progressive: true,
-                arithmetic: false,
-            }),
-            imagemin.optipng({
-                optimizationLevel: 3,
-                bitDepthReduction: true,
-                colorTypeReduction: true,
-                paletteReduction: true,
-            }),
-            imagemin.svgo({
-                plugins: [{
-                        removeViewBox: false,
-                    },
-                    {
-                        cleanupIDs: false,
-                    },
-                ],
-            }),
-        ])
-    ))
-    .pipe(gulp.dest('./dist/img/'))
-    .pipe(browserSync.stream())
-    .on('end', () => log('✅ IMAGES — completed!')));
+gulp.task('images', () => {
+    log('⚡️ — Processing images...');
 
+    let gulpTask = gulp
+        .src(config.imgSource)
+        .pipe(
+            cache(
+                imagemin([
+                    imagemin.gifsicle({
+                        interlaced: true,
+                        optimizationLevel: 2,
+                        colors: 256,
+                    }),
+                    imagemin.jpegtran({
+                        progressive: true,
+                        arithmetic: false,
+                    }),
+                    imagemin.optipng({
+                        optimizationLevel: 3,
+                        bitDepthReduction: true,
+                        colorTypeReduction: true,
+                        paletteReduction: true,
+                    }),
+                    imagemin.svgo({
+                        plugins: [
+                            {
+                                removeViewBox: false,
+                            },
+                            {
+                                cleanupIDs: false,
+                            },
+                        ],
+                    }),
+                ])
+            )
+        )
+        .pipe(gulp.dest(`${buildDirectory}/assets/img`));
+
+    if (isDev) {
+        gulpTask = gulpTask.pipe(browserSync.stream());
+    }
+
+    gulpTask = gulpTask.on('end', () => log('✅ IMAGES — completed!'));
+
+    return gulpTask;
+});
 
 /**
  * -----------------------------------------------------------------------------
- * Task: `clear-images-cache`.
+ * Task: `clearCache`.
  *
  * @description Deletes the images cache. By running the next "images" task,
  *              each image will be regenerated.
  * -----------------------------------------------------------------------------
  */
 
-gulp.task('clearCache', done => cache.clearAll(done));
+gulp.task('clearImageCache', done => cache.clearAll(done));
 
+/**
+ * -----------------------------------------------------------------------------
+ * Task: `html`.
+ *
+ * @description Watches html files for changes.
+ * -----------------------------------------------------------------------------
+ */
+
+gulp.task('html', () => {
+    log('⚡️ — Updating browser to reflect HTML changes...');
+
+    const gulpTask = gulp
+        .src(config.htmlSource)
+        .pipe(browserSync.stream())
+        .on('end', () => log('✅ HTML — completed!'));
+
+    return gulpTask;
+});
+
+/**
+ * -----------------------------------------------------------------------------
+ * Task: `src`.
+ *
+ * @description Copies php source files to the distribution folder.
+ * -----------------------------------------------------------------------------
+ */
+
+gulp.task('src', () => {
+    log('⚡️ — Processing source files...');
+
+    const gulpTask = gulp
+        .src(config.phpSource)
+        .pipe(gulp.dest(`${buildDirectory}`))
+        .on('end', () => log('✅ SOURCE — completed!'));
+
+    return gulpTask;
+});
 
 /**
  * -----------------------------------------------------------------------------
@@ -271,53 +371,21 @@ gulp.task('clearCache', done => cache.clearAll(done));
  * -----------------------------------------------------------------------------
  */
 
-gulp.task('includes', () => gulp.src(config.incSource)
-    .pipe(gulp.dest('./dist/inc/'))
-    .pipe(browserSync.stream())
-    .on('end', () => log('✅ INCLUDES — completed!')));
+gulp.task('includes', () => {
+    log('⚡️ — Processing included files...');
 
+    let gulpTask = gulp
+        .src(config.incSource)
+        .pipe(gulp.dest(`${buildDirectory}/assets/includes`));
 
-/**
- * -----------------------------------------------------------------------------
- * Task: `views:dev`.
- *
- * @description Watch HTML files for changes and inject the new code.
- * -----------------------------------------------------------------------------
- */
+    if (isDev) {
+        gulpTask = gulpTask.pipe(browserSync.stream());
+    }
 
-function renderViews() {
-    return gulp.src(config.watchViews)
-        .pipe(browserSync.stream());
-}
+    gulpTask = gulpTask.on('end', () => log('✅ INCLUDES — completed!'));
 
-
-/**
- * -----------------------------------------------------------------------------
- * Task: `translate`.
- *
- * @description Generates WP POT Translation files.
- *
- * This task does the following:
- *    1. Gets the source of all the PHP files.
- *    2. Sort files in stream by path or any custom sort comparator.
- *    3. Applies wpPot with the variable set at the top of this file.
- *    4. Generate a .pot file of i18n that can be used for l10n to build .mo
- *       file.
- * -----------------------------------------------------------------------------
- */
-
-gulp.task('translate', () => gulp.src(config.translationSource)
-    .pipe(sort())
-    .pipe(wpPot({
-        domain: config.textDomain,
-        package: config.packageName,
-        bugReport: config.bugReport,
-        lastTranslator: config.lastTranslator,
-        team: config.team,
-    }))
-    .pipe(gulp.dest(`${config.translationDestination}/${config.translationFile}`))
-    .on('end', () => log('✅ TRANSLATE — completed!')));
-
+    return gulpTask;
+});
 
 /**
  * -----------------------------------------------------------------------------
@@ -328,11 +396,54 @@ gulp.task('translate', () => gulp.src(config.translationSource)
  */
 
 gulp.task('watch', () => {
-    gulp.watch(config.watchViews, gulp.series(renderViews));
+    log('🔍 — Watching files for changes...');
+
     gulp.watch(config.watchStyles, gulp.series('styles'));
-    gulp.watch(config.watchScripts, gulp.series('scripts:dev'));
+    gulp.watch(config.watchScripts, gulp.series('scripts'));
+    gulp.watch(config.htmlSource, gulp.series('html'));
+    gulp.watch(config.phpSource, gulp.series('src'));
     gulp.watch(config.imgSource, gulp.series('images'));
     gulp.watch(config.incSource, gulp.series('includes'));
 });
 
-gulp.task('default', gulp.parallel('styles', 'scripts:dev', 'images', 'includes', runBrowserSync, 'watch'));
+/**
+ * -----------------------------------------------------------------------------
+ * Task: `build`.
+ *
+ * @description Build theme without initializing browserSync or file watchers.
+ * -----------------------------------------------------------------------------
+ */
+
+gulp.task(
+    'prod',
+    gulp.series(
+        init,
+        'clearImageCache',
+        gulp.parallel('styles', 'scripts', 'src', 'images', 'includes')
+    )
+);
+
+/**
+ * -----------------------------------------------------------------------------
+ * Task: `default`.
+ *
+ * @description Runs gulp tasks and initializes browserSync and watches files.
+ * -----------------------------------------------------------------------------
+ */
+
+gulp.task(
+    'default',
+    gulp.series(
+        init,
+        'clearImageCache',
+        gulp.parallel(
+            'styles',
+            'scripts',
+            'html',
+            'src',
+            'images',
+            'includes',
+            'watch'
+        )
+    )
+);

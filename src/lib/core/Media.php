@@ -8,16 +8,15 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD;
+namespace CORE;
 
 class Media {
     public function __construct()
     {
-        // Register default and custom images sizes as well as JPG quality.
-        $this->addImageSizes();
+        // $this->addImageSizes();
+        // add_action('after_setup_theme', array($this, 'addImageSizes'));
+        // add_filter('image_size_names_choose', array($this, 'customImageSizes'));
         add_action('after_setup_theme', array($this, 'defaultMediaSettings'));
-        add_action('after_setup_theme', array($this, 'addImageSizes'));
-        add_filter('image_size_names_choose', array($this, 'customImageSizes'));
         add_action('jpeg_quality', array($this, 'customJpegQuality'));
 
         // Add Custom Fonts
@@ -32,9 +31,6 @@ class Media {
 
         // Add additional font size options to the editor.
         add_filter('tiny_mce_before_init', array($this, 'editorExtendFontSizes'));
-
-        // Add filter for responsive embedded objects (i.e. videos).
-        add_filter('the_content', array($this, 'contentResponsiveEmbeds'));
     }
 
     /**
@@ -55,9 +51,9 @@ class Media {
      */
     public function customImageSizes($sizes)
     {
-        return array_merge($sizes, array(
-            // 'example_size' => __('Example Size'),
-        ));
+        /* return array_merge($sizes, array(
+            'example_size' => __('Example Image Size'),
+        )); */
     }
 
     /**
@@ -103,15 +99,7 @@ class Media {
 
         $font_formats = isset($init['font_formats']) ? $init['font_formats'] : 'Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats';
 
-        $custom_fonts = '';
-
-        /*
-
-        Here is an example of how to register custom fonts in the editor:
-
-        $custom_fonts = ';' . 'IBM Plex Sans=ibm plex sans,helvetica,arial,sans-serif;IBM Plex Serif=ibm plex serif,georgia,arial,sans-serif';
-
-        */
+        $custom_fonts = ';' . '';
 
         $init['font_formats'] = $font_formats . $custom_fonts;
 
@@ -137,21 +125,5 @@ class Media {
         $initArray['fontsize_formats'] = '9px 10px 11px 12px 14px 16px 18px 20px 24px 28px 32px 36px 40px 44px 48px 52px 56px 60px 64px 68px 72px 78px 82px 86px 90px 94px 98px 102px 106px 110px 114px 118px 122px 126px 130px 134px 138px 142px 146px 150px';
 
         return $initArray;
-    }
-
-    /**
-     * Filter for adding responsive CSS wrappers around embedded objects.
-     */
-    public function contentResponsiveEmbeds($content)
-    {
-        // Object Filtering
-        $content = preg_replace("/<object/Si", '<div class="launchpad-embed-responsive"><object', $content);
-        $content = preg_replace("/<\/object>/Si", '</object></div>', $content);
-
-        // Iframe Filtering
-        $content = preg_replace("/<iframe.+?src=\"(.+?)\"/Si", '<div class="launchpad-embed-responsive"><iframe src="\1" frameborder="0" allow="\1" allowfullscreen>', $content);
-        $content = preg_replace("/<\/iframe>/Si", '</iframe></div>', $content);
-
-        return $content;
     }
 }

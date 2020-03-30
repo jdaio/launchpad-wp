@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD\Extensions;
+namespace CORE\Extensions;
 
 class Assets implements SiteExtension {
     public function extend()
@@ -38,7 +38,6 @@ class Assets implements SiteExtension {
             true
         );
 
-        // Hide jQuery inclusion behind ACF field option.
         if (get_field('jquery_enabled', 'option')) {
             wp_enqueue_script('jquery');
         }

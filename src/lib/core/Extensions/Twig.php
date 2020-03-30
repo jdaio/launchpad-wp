@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD\Extensions;
+namespace CORE\Extensions;
 
 class Twig implements SiteExtension {
     public function extend()
@@ -49,7 +49,7 @@ class Twig implements SiteExtension {
                 $twig,
                 'functionName',
                 array(
-                    '\BJC\Extensions\Twig',
+                    '\CORE\Extensions\Twig',
                     'function_callback',
                 )
             );
@@ -72,7 +72,7 @@ class Twig implements SiteExtension {
                 $twig,
                 'filterName',
                 array(
-                    '\BJC\Extensions\Twig',
+                    '\CORE\Extensions\Twig',
                     'filter_callback',
                 )
             );
@@ -95,7 +95,7 @@ class Twig implements SiteExtension {
                 $twig,
                 'testName',
                 array(
-                    '\BJC\Extensions\Twig',
+                    '\CORE\Extensions\Twig',
                     'test_callback',
                 )
             );

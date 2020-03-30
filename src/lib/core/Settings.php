@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace LAUNCHPAD;
+namespace CORE;
 
 class Settings {
     const VIEWS_DIR = 'views';
@@ -35,7 +35,7 @@ class Settings {
     private function loadExtensions()
     {
         foreach ($this->extensions as $extension) {
-            $class = '\LAUNCHPAD\Extensions\\' . $extension;
+            $class = '\CORE\Extensions\\' . $extension;
             $extension = new $class();
 
             if (!$extension instanceof Extensions\SiteExtension) {

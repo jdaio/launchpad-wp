@@ -3,26 +3,6 @@
 
 # Always Ignore
 *~
-
-# Packages
-*.7z
-*.bz2
-*.dmg
-*.gz
-*.iso
-*.jar
-*.map
-*.rar
-*.tar
-*.tgz
-*.zip
-
-# Logs and Databases
-*.env
-*.log
-*.sql
-
-# macOS / Windows Generated Files
 **.DS_Store*
 *.esproj
 *.sublime-project
@@ -30,17 +10,98 @@
 *.un~
 ._*
 .AppleDouble
+*.bak
 .cache
+.cvs
 .LSOverride
 .project
 .settings
 .Spotlight-V100
+.svn
+*.swp
 .tmproj
 .Trashes
 Desktop.ini
 ehthumbs.db
 nbproject
 Thumbs.db
+
+# wordpress specific
+wp-config.php
+wp-content/uploads/
+wp-content/blogs.dir/
+wp-content/upgrade/*
+wp-content/backup-db/*
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+wp-content/cache/*
+wp-content/cache/supercache/*
+
+# wpengine specific
+.smushit-status
+.gitattributes
+_wpeprivate*
+wp-content/object-cache.php
+wp-content/mu-plugins/mu-plugin.php
+wp-content/mu-plugins/slt-force-strong-passwords.php
+wp-content/mu-plugins/stop-long-comments.php
+wp-content/mu-plugins/force-strong-passwords*
+wp-content/mu-plugins/wpengine-common*
+wp-content/mysql.sql
+
+# wp core (as of 4.9.5)
+/db-config.php
+/index.php
+/license.txt
+/readme.html
+/wp-activate.php
+/wp-app.php
+/wp-atom.php
+/wp-blog-header.php
+/wp-comments-post.php
+/wp-commentsrss2.php
+/wp-config-sample.php
+/wp-cron.php
+/wp-feed.php
+/wp-links-opml.php
+/wp-load.php
+/wp-login.php
+/wp-mail.php
+/wp-rdf.php
+/wp-rss.php
+/wp-rss2.php
+/wp-pass.php
+/wp-register.php
+/wp-settings.php
+/wp-signup.php
+/wp-trackback.php
+/xmlrpc.php
+/wp-admin
+/wp-includes
+/wp-content/index.php
+/wp-content/themes/twentyten
+/wp-content/themes/twentyeleven
+/wp-content/themes/twentytwelve
+/wp-content/themes/twentythirteen
+/wp-content/themes/twentyfourteen
+/wp-content/themes/twentyfifteen
+/wp-content/themes/twentysixteen
+/wp-content/themes/twentyseventeen
+/wp-content/themes/index.php
+/wp-content/plugins/index.php
+/wp-content/plugins/akismet*
+
+# Logs and Databases
+logs
+*.env*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.sql
+
+# ESLint Cache
+.eslintcache
 
 # SASS Generated Files
 **/.sass-cache
@@ -51,6 +112,15 @@ Thumbs.db
 node_modules/
 /node_modules/
 npm-debug.log
+.node_repl_history
+.npm
+jspm_packages/
+
+# Yarn
+yarn-error.log
+.pnp/
+.pnp.js
+.yarn-integrity
 
 # Compiled Files and Build Dirs
 build/**
@@ -58,6 +128,7 @@ build/**
 
 # IDEs & Editors
 .idea
+.vscode
 library/vendors/composer
 /codekit-config.json
 *.codekit
@@ -67,3 +138,47 @@ library/vendors/composer
 # !assets/js/vendor/
 wpcs/
 /vendor/
+composer.phar
+
+# Large/disallowed file types
+*.hqx
+*.bin
+*.exe
+*.dll
+*.deb
+*.dmg
+*.iso
+*.img
+*.msi
+*.msp
+*.msm
+*.mid
+*.midi
+*.kar
+*.mp3
+*.ogg
+*.m4a
+*.ra
+*.3gpp
+*.3gp
+*.mp4
+*.mpeg
+*.mpg
+*.mov
+*.webm
+*.flv
+*.m4v
+*.mng
+*.asx
+*.asf
+*.wmv
+*.avi
+*.7z
+*.bz2
+*.gz
+*.jar
+*.map
+*.rar
+*.tar
+*.tgz
+*.zip
