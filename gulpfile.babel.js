@@ -67,7 +67,7 @@ import config from './launchpad.config';
  * -----------------------------------------------------------------------------
  */
 
-const errorHandler = r => {
+const errorHandler = (r) => {
     log.error('❌ ERROR: <%= error.message %>')(r);
 };
 
@@ -323,7 +323,7 @@ gulp.task('images', () => {
  * -----------------------------------------------------------------------------
  */
 
-gulp.task('clearImageCache', done => cache.clearAll(done));
+gulp.task('clearImageCache', (done) => cache.clearAll(done));
 
 /**
  * -----------------------------------------------------------------------------

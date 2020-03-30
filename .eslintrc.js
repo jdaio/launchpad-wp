@@ -1,15 +1,15 @@
 module.exports = {
     env: {
         commonjs: true,
-        es6: true
+        es6: true,
     },
     extends: 'airbnb',
     parserOptions: {
-        sourceType: 'module'
+        sourceType: 'module',
     },
     plugins: ['import', 'prettier'],
     root: true,
     rules: {
-        indent: ['error', 4]
-    }
+        indent: ['error', 4],
+    },
 };

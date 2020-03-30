@@ -8,13 +8,22 @@ Launchpad is a Gulp-powered development kit for WordPress themes.
 
 Launchpad requires [Node.js](https://nodejs.org/) v12+ to run.
 
-To get started, clone and install the project.
+To get started, clone, install and run the project.
 
 ```sh
 $ git clone https://github.com/jdaio/launchpad-wp.git
 $ cd launchpad-wp
 $ npm install
 $ npm run start
+```
+
+Composer can also be setup with the following. Included is PHPCS and the PSR-1 ruleset.
+
+```sh
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
+$ composer install
 ```
 
 ## Settings

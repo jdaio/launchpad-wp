@@ -1,25 +1,21 @@
 {% block html_head %}
 
-	{% include 'partials/p-html-head.twig' %}
+	{% include 'partials/html-head.twig' %}
 
 {% endblock %}
 
 <body class="{{ body_class }}">
     {% block header %}
 
-        {# {% include 'partials/p-header.twig' %} #}
+        {# {% include 'partials/header.twig' %} #}
 
     {% endblock %}
 
-    <main class="global-content" role="main">
+    <main role="main">
 
         {% block content %}
 
-            <div class="common-container common-content">
-                <div class="col-12">
-                    <p>No content available.</p>
-                </div>
-            </div>
+            <p>No content available.</p>
 
         {% endblock %}
 
@@ -27,9 +23,11 @@
 
     {% block footer %}
 
-        {# {% include 'partials/p-footer.twig' %} #}
+        {% include 'partials/footer.twig' %}
 
     {% endblock %}
+
+    {{ fn('wp_footer') }}
 
 </body>
 </html>
