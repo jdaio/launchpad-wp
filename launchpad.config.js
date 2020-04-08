@@ -26,7 +26,7 @@ module.exports = {
      */
 
     // Path to main .scss file.
-    styleEntry: './assets/scss/main.scss', // Path to main .scss file.
+    styleSource: './assets/scss/**/*.scss', // Path to main .scss file.
     watchStyles: './assets/scss/**/*.scss',
 
     // Browser Compatibility

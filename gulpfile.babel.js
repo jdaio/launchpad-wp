@@ -138,13 +138,27 @@ gulp.task('styles', () => {
         .src(config.styleEntry, {
             allowEmpty: true,
         })
-        .pipe(plumber(errorHandler))
-        .pipe(rename('style.min.css'));
+        .pipe(plumber(errorHandler));
 
     if (isDev) {
-        gulpTask = gulpTask.pipe(rename('style.css')).pipe(
-            sourcemaps.init({
-                loadMaps: true,
+        gulpTask = gulpTask
+            .pipe(
+                rename(() => {
+                    return {
+                        extname: '.css',
+                    };
+                })
+            )
+            .pipe(
+                sourcemaps.init({
+                    loadMaps: true,
+                })
+            );
+    } else {
+        gulpTask = gulpTask.pipe(
+            rename(function (path) {
+                path.basename = path.basename + '.min';
+                path.extname = '.css';
             })
         );
     }
