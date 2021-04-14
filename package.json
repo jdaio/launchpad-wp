@@ -14,18 +14,18 @@
     "scss",
     "web"
   ],
-  "homepage": "https://github.com/jdaio/launchpad-wp",
+  "homepage": "https://github.com/jamalhemsley/launchpad-wp",
   "author": {
-    "name": "Jamal Ali-Mohammed",
-    "email": "jamal@digitalheat.co",
-    "url": "https://digitalheat.co"
+    "name": "Jamal Hemsley",
+    "email": "jamal@digitalhe.at",
+    "url": "https://digitalhe.at"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jdaio/launchpad-wp.git"
+    "url": "git+https://github.com/jamalhemsley/launchpad-wp.git"
   },
   "bugs": {
-    "url": "https://github.com/jdaio/launchpad-wp/issues"
+    "url": "https://github.com/jamalhemsley/launchpad-wp/issues"
   },
   "license": "GPL-3.0-or-later",
   "engines": {

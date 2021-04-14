@@ -9,7 +9,7 @@
  *
  * @overview Handles all file processing tasks, as well as BrowserSync, etc.
  *
- * @author Jamal Ali-Mohammed <jamal@digitalheat.co>
+ * @author Jamal Hemsley <jamal@digitalhe.at>
  *
  * @version 3.0.0
  * -----------------------------------------------------------------------------
